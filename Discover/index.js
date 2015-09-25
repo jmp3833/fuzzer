@@ -35,7 +35,10 @@ module.exports = {
       }); 
     });
   },
-
+  
+  /*
+   * Hard auth into bodgeit store
+   */ 
   authIntoBodgeit: function(siteUrl, callback) {
     siteUrl = urlParser.parse(siteUrl);
     Browser.localhost(siteUrl.hostname, siteUrl.port? siteUrl.port : '80');
@@ -57,9 +60,9 @@ module.exports = {
           });
         });
     });
+  },
+
+  parseCommonWords: function(words) {
+             
   }
-}
-
-function done(browser) {
-
 }

@@ -1,4 +1,5 @@
 var Discover = require('./Discover');
+var fs = require('fs');
 
 //Mode. Either discover or test
 var mode = process.argv[2];
@@ -31,28 +32,40 @@ for(var i = 4; i < process.argv.length; i++) {
 
 if(mode === "discover") {
   if(optionsMap['custom-auth'] === 'dvwa') {
-    Discover.authIntoDVWA(url, function (browser) {
-      console.log(browser.html());
-    }); 
+    Discover.authIntoDVWA(url, discoverOnBrowser);
   }
 
   else if(optionsMap['custom-auth'] === 'bodgeit') {
-    Discover.authIntoBodgeit(url, function(browser) {
-      console.log(browser.html()); 
-    });
+    Discover.authIntoBodgeit(url, discoverOnBrowser);
   }
 
   else {
     console.log("Custom-auth site was either not dvwa or bodgeit, or was not provided.");
     console.log("Moving forward without custom authentication...");
-    Discover.discover(url, function(browser) {
-      console.log(browser.html());
-    });
+    Discover.discover(url,discoverOnBrowser);
   }
 }
+
 else if(mode === "test") {
   //Test mode to be implemented in R2  
 }
 else {
   console.error('unrecognized mode: ' + mode);
+}
+
+function parseCommonWords(path) {
+  var commonWords = [];
+  fs.readFile(path, function (err, data) {
+    if (err) throw err;
+    commonWords = data.toString().split('\n');
+  }); 
+}
+
+/*
+ * Browser has been initalized and app has been
+ * authenticated if it has been requestd to do so.
+ * let's discover some inputs!
+ */
+function discoverOnBrowser(browser) {
+  console.log(browser.html());
 }
