@@ -1,4 +1,4 @@
-var Discover = require('./discover');
+var Discover = require('./Discover');
 
 //Mode. Either discover or test
 var mode = process.argv[2];
@@ -15,6 +15,10 @@ var optionsMap = {
   "slow": 0 
 }
 
+if(process.argv.length < 4){
+  console.log("usage: node app.js [discover/test] url --options");
+}
+
 for(var i = 4; i < process.argv.length; i++) {
   var argument = process.argv[i].split("=");
   argument[0] = argument[0].slice(2);
@@ -26,7 +30,21 @@ for(var i = 4; i < process.argv.length; i++) {
 }
 
 if(mode === "discover") {
-  Discover.discover(url, optionsMap);
+  if(optionsMap['custom-auth'] === 'dvwa') {
+    Discover.authIntoDVWA(function (browser) {
+      console.log(browser.html());
+    }); 
+  }
+
+  else if(optionsMap['custom-auth'] === 'bodgeit') {
+
+  }
+
+  else {
+    console.log("Custom-auth site was either not dvwa or bodgeit, or was not provided.");
+    console.log("Moving forward without custom authentication...");
+    Discover.discover(url);
+  }
 }
 else if(mode === "test") {
   //Test mode to be implemented in R2  
