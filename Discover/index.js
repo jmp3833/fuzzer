@@ -21,8 +21,9 @@ module.exports = {
    * Hard authenticate into DVWA with hard coded cridentials.
    * Returns an instance of the browser at the main index page.
    */ 
-  authIntoDVWA: function(callback) {
-    Browser.localhost('0.0.0.0');
+  authIntoDVWA: function(siteUrl, callback) {
+    siteUrl = urlParser.parse(siteUrl);
+    Browser.localhost(siteUrl.hostname, siteUrl.port? siteUrl.port : '80');
     var browser = new Browser();
     
     browser.visit('/dvwa/login.php', function() {
@@ -32,6 +33,29 @@ module.exports = {
      .pressButton('input[name="Login"]', function(res) {
         callback(browser);
       }); 
+    });
+  },
+
+  authIntoBodgeit: function(siteUrl, callback) {
+    siteUrl = urlParser.parse(siteUrl);
+    Browser.localhost(siteUrl.hostname, siteUrl.port? siteUrl.port : '80');
+
+    var browser = new Browser();
+    browser.visit('/bodgeit/register.jsp', function() {
+      browser
+        .fill('input[name="username"]', 'example@email.com' )
+        .fill('input[name="password1"]', 'password' )
+        .fill('input[name="password2"]', 'password' )
+        .pressButton('input[value="Register"]', function(res) {
+          browser.visit('/bodgeit/login.jsp', function() {
+ 	    browser
+              .fill('input[name="username"]', 'example@email.com' )
+              .fill('input[name="password"]', 'password' )
+              .pressButton('input[value="Login"]', function(res) {
+                callback(browser); 
+              });
+          });
+        });
     });
   }
 }

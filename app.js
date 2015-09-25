@@ -31,13 +31,15 @@ for(var i = 4; i < process.argv.length; i++) {
 
 if(mode === "discover") {
   if(optionsMap['custom-auth'] === 'dvwa') {
-    Discover.authIntoDVWA(function (browser) {
+    Discover.authIntoDVWA(url, function (browser) {
       console.log(browser.html());
     }); 
   }
 
   else if(optionsMap['custom-auth'] === 'bodgeit') {
-
+    Discover.authIntoBodgeit(url, function(browser) {
+      console.log(browser.html()); 
+    });
   }
 
   else {
