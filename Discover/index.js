@@ -6,12 +6,15 @@ module.exports = {
   /*
    * Jump into URL without authentication
    */ 
-  discover: function(siteUrl, optionsMap) {
-    var browser = new Browser();
+  discover: function(siteUrl, callback) {
     siteUrl = urlParser.parse(siteUrl);
-
-    
     Browser.localhost(siteUrl.hostname, siteUrl.port? siteUrl.port : '80');
+    var browser = new Browser();
+
+    browser.visit(siteUrl.path, function() {
+      callback(browser);
+    });
+
   },
 
   /*

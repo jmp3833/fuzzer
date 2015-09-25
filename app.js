@@ -43,7 +43,9 @@ if(mode === "discover") {
   else {
     console.log("Custom-auth site was either not dvwa or bodgeit, or was not provided.");
     console.log("Moving forward without custom authentication...");
-    Discover.discover(url);
+    Discover.discover(url, function(browser) {
+      console.log(browser.html());
+    });
   }
 }
 else if(mode === "test") {
