@@ -1,5 +1,6 @@
 var Discover = require('./Discover');
 var fs = require('fs');
+var Crawl = require('./Crawl');
 
 //Mode. Either discover or test
 var mode = process.argv[2];
@@ -62,10 +63,13 @@ function parseCommonWords(path) {
 }
 
 /*
- * Browser has been initalized and app has been
+ * Browser has been initialized and app has been
  * authenticated if it has been requestd to do so.
  * let's discover some inputs!
  */
 function discoverOnBrowser(browser) {
   console.log(browser.html());
+  Crawl.findPageLinks(browser, url, function(mapping) {
+    console.log(JSON.stringify(mapping));
+  })
 }
