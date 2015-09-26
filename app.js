@@ -54,11 +54,11 @@ else {
   console.error('unrecognized mode: ' + mode);
 }
 
-function parseCommonWords(path) {
-  var commonWords = [];
+function parseCommonWords(path, callback) {
   fs.readFile(path, function (err, data) {
     if (err) throw err;
     commonWords = data.toString().split('\n');
+    callback(commonWords);
   }); 
 }
 
@@ -68,8 +68,19 @@ function parseCommonWords(path) {
  * let's discover some inputs!
  */
 function discoverOnBrowser(browser) {
-  console.log(browser.html());
+  if(optionsMap['common-words'] != 0) {
+    parseCommonWords(optionsMap['common-words'], function(wordsArray) {
+      console.log("Analyzing common words input for " + wordsArray.length, "words.");
+      console.log("===============================");
+      Discover.parseCommonWords(url, browser, wordsArray);
+    });
+  }
+
+  //Check cookie and show to user
+  Discover.showCookie(browser);
+  //Crawl pages and display all discovered links/input fields to user
   Crawl.findPageLinks(browser, url, function(mapping) {
-    console.log(JSON.stringify(mapping));
+    console.log("Pages and input fields discovered:");
+    console.log(JSON.stringify(mapping, null, 2));
   })
 }
