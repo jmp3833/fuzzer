@@ -70,8 +70,11 @@ function discoverOnBrowser(browser) {
   if(optionsMap['common-words'] != 0) {
     parseCommonWords(optionsMap['common-words'], function(wordsArray) {
       console.log("Analyzing common words input for " + wordsArray.length, "words.");
-      console.log(wordsArray);
+      console.log("===============================");
       Discover.parseCommonWords(url, browser, wordsArray);
     });
   }
+
+  //Check cookie and show to user
+  Discover.showCookie(browser);
 }

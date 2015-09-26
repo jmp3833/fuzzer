@@ -65,13 +65,11 @@ module.exports = {
   },
 
   parseCommonWords: function(siteUrl, browser, words) {
-    console.log(words);
     siteUrl = urlParser.parse(siteUrl);
 
     for(var i = 0; i < words.length; i++) {
       console.log(siteUrl.path + '/' + words[i]);
       browser.visit(siteUrl.path + '/' + words[i], function() {
-        // console.logbrowser.response);
         if(browser.html().indexOf('404') > -1) {
           console.log('Page found for common-words entry');
         }
@@ -79,6 +77,15 @@ module.exports = {
           console.log("No page found for common-words entry");
         }
       });  
+    }
+  },
+
+  showCookie: function(browser) {
+    console.log("cookie(s) detected!");
+    console.log("==============================");
+    for(var i = 0; i < browser.cookies.length; i++) {
+      console.log(browser.cookies[i]);
+      console.log("==============================");
     }
   }
 }
