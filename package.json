@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jmp3833/fuzzer",
   "dependencies": {
+    "normalizeurl": "^0.1.3",
     "url": "^0.11.0",
     "zombie": "^4.1.0"
   }

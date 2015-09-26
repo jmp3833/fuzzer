@@ -28,3 +28,6 @@ node_modules
 
 #Vim SwpFiles
 *.swp 
+
+.xml
+.idea
