@@ -38,13 +38,9 @@ target website to test's url, and the fuzzer will have begun crawling through th
 after those to use additional options for the fuzzer, also detailed below(the ones that are prefixed with "--").
 
 List of commands and their functionality:
+COMMANDS:
+  * `discover`: Output a comprehensive, human-readable list of all discovered inputs to the system. Techniques include both crawling and guessing.
+OPTIONS:
+  * `--custom-auth=string`     Signal that the fuzzer should use hard-coded authentication for a specific application (e.g. dvwa). Optional.
+  *  `--common-words=file`     Newline-delimited file of common words to be used in page guessing and input guessing
 
-   COMMANDS:
-     discover     Output a comprehensive, human-readable list of all discovered inputs to the system. Techniques include both crawling and guessing.
-     test     Discover all inputs, then attempt a list of exploit vectors on those inputs. Report potential vulnerabilities.
-
-   OPTIONS:
-     --custom-auth=string     Signal that the fuzzer should use hard-coded authentication for a specific application (e.g. dvwa). Optional.
-
-     Discover options:
-     --common-words=file     Newline-delimited file of common words to be used in page guessing and input guessing. Required.
