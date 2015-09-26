@@ -14,7 +14,7 @@ A simple fuzz tester written in javascript using the Node.js framework.
 CONFIGURATION
 ------------
 This software requires the following, please download and install these before proceeding:
-    Node.js (https://nodejs.org/en/) min. v4.1.1
+* Node.js (https://nodejs.org/en/) min. v4.1.1
 
 
 INSTALL
