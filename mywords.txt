@@ -1,6 +1,5 @@
-hey dad
-I like eggs
 app.js
 index.jsp
 admin.php
 admin.jsp
+phpinfo.php

@@ -31,6 +31,7 @@ module.exports = {
      .fill('input[name="username"]', "admin")
      .fill('input[name="password"]', "password")
      .pressButton('input[name="Login"]', function(res) {
+        console.log('Properly authenticated into DVWA!');
         callback(browser);
       }); 
     });
@@ -55,6 +56,7 @@ module.exports = {
               .fill('input[name="username"]', 'example@email.com' )
               .fill('input[name="password"]', 'password' )
               .pressButton('input[value="Login"]', function(res) {
+                console.log('Properly authenticated into Bogeit');
                 callback(browser); 
               });
           });
@@ -62,7 +64,21 @@ module.exports = {
     });
   },
 
-  parseCommonWords: function(words) {
-             
+  parseCommonWords: function(siteUrl, browser, words) {
+    console.log(words);
+    siteUrl = urlParser.parse(siteUrl);
+
+    for(var i = 0; i < words.length; i++) {
+      console.log(siteUrl.path + '/' + words[i]);
+      browser.visit(siteUrl.path + '/' + words[i], function() {
+        // console.logbrowser.response);
+        if(browser.html().indexOf('404') > -1) {
+          console.log('Page found for common-words entry');
+        }
+        else {
+          console.log("No page found for common-words entry");
+        }
+      });  
+    }
   }
 }
