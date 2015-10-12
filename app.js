@@ -48,7 +48,17 @@ if(mode === "discover") {
 }
 
 else if(mode === "test") {
-  //Test mode to be implemented in R2  
+  //Parse input vectors into the app
+  console.log("parsing input vectors...");
+  if(optionsMap['vectors'] == 0) {
+    console.error("No vectors option was provided!");
+    process.exit();
+  }
+
+  fs.readFile(optionsMap['vectors'], function (err, data) {
+    if (err) throw err;
+    var vectors = data.toString().split('\n');
+  }); 
 }
 else {
   console.error('unrecognized mode: ' + mode);
@@ -83,4 +93,8 @@ function discoverOnBrowser(browser) {
     console.log("Pages and input fields discovered:");
     console.log(JSON.stringify(mapping, null, 2));
   })
+}
+
+function parseInputVectors() {
+
 }
