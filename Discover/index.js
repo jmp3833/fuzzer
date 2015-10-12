@@ -31,8 +31,8 @@ module.exports = {
      .fill('input[name="username"]', "admin")
      .fill('input[name="password"]', "password")
      .pressButton('input[name="Login"]', function(res) {
-        console.log('Properly authenticated into DVWA!');
-        callback(browser);
+        console.log('Verifying authentication into DVWA...');
+        verifyAuth(browser, "DVWA", callback);
       }); 
     });
   },
@@ -56,8 +56,8 @@ module.exports = {
               .fill('input[name="username"]', 'example@email.com' )
               .fill('input[name="password"]', 'password' )
               .pressButton('input[value="Login"]', function(res) {
-                console.log('Properly authenticated into Bogeit');
-                callback(browser); 
+                console.log('Verifying authentication into Bodgeit...');
+                verifyAuth(browser, "Bodgeit", callback);
               });
           });
         });
@@ -88,4 +88,15 @@ module.exports = {
       console.log("==============================");
     }
   }
+}
+
+function verifyAuth(browser, appString, callback) {
+  if(browser.response.status == '200') {
+    console.log("Successful login into " + appString + "!");
+    console.log("Status Code: " + browser.response.status);
+  }
+  else {
+    console.log("Login error into " + appString + "!!"); 
+  }
+  callback(browser); 
 }
