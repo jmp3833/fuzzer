@@ -28,6 +28,7 @@ node_modules
 
 #Vim SwpFiles
 *.swp 
+*.swo
 
 .xml
 .idea
