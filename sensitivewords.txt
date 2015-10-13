@@ -1,0 +1,8 @@
+sql
+password
+admin
+database
+authentication
+auth
+query
+mysql

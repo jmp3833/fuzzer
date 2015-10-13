@@ -17,6 +17,8 @@ module.exports = {
       } else if (stillLooking == 0) {
         callback(mapping);
       }
+
+        /*Sensitive data check using isSensitive goes here */
     }
 
     function visitLinks(links, baseUrl, discoveredUrls, mapping, callback, i) {
@@ -96,6 +98,14 @@ module.exports = {
 
       return a;
     };
+
+    function isSensitive(){
+      var fs = require('fs');
+      var wordlist = fs.readFileSync('sensitivewords.txt').toString().split("\n");
+      for(i in wordlist) {
+
+      }
+    }
 
     crawl(baseUrl, [], {}, browser.url, browser.document, callback);
   }
