@@ -1,6 +1,6 @@
 module.exports = {
   findVulnerabilities: function(siteUrl, auth, vectors, mapping, callback) {
-    console.log('in here');
+    console.log('Checking for lack of sanitization.');
     var vulns = [];
     var keys = Object.keys(mapping);
     var stillLooking = 0;
@@ -10,26 +10,41 @@ module.exports = {
     }
 
     for (var i = 0; i < keys.length; i++) {
+      visitLink(keys, i);
+    }
+
+    function visitLink(keys, i) {
       var formParams = mapping[keys[i]]['form-params'];
-      if (formParams.length != 0) {
+      if (formParams[0] != undefined && formParams[0].length != 0) {
         stillLooking++;
 
-        var formParams = mapping[keys[i]]['form-params'];
-
         for (var j = 0; j < vectors.length; j++) {
-          for (var k = 0; k < formParams.length; k++) {
-            auth(keys[i], function(browser) {
-              browser.fill('input[name="'+formParams[k]+'"]', vectors[j]);
-              browser.pressButton('input[name="Submit"]', function(res) { // TODO what input should we hit?
-                vulns.push(res);
-                console.log(res);
-                stillLooking--;
-                if (i == keys.length - 1 && stillLooking == 0) {
-                  callback(vulns);
+          var url = keys[i];
+          auth(siteUrl, function(browser) {
+            browser.visit(url, function() {
+              var submitName = '';
+              var foundText = false;
+              for (var k = 0; k < formParams[0].length; k++) {
+                if (formParams[0][k][0] == 'submit') {
+                  submitName = formParams[0][k][1];
                 }
-              });
+                if (formParams[0][k][1] != null && formParams[0][k][0] == 'text') {
+                  foundText = true;
+                  browser.fill('input[name="'+formParams[0][k][1]+'"]', vectors[j]);
+                }
+              }
+              if (submitName != '' && foundText) {
+                browser.pressButton('input[type="submit"]', function() {
+                  vulns.push(browser.response);
+                  stillLooking--;
+                  console.log('Checking form on '+url);
+                  if (i == keys.length - 1 && stillLooking == 0) {
+                    callback(vulns);
+                  }
+                });
+              }
             });
-          }
+          });
         }
       }
     }

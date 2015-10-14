@@ -42,7 +42,7 @@ module.exports = {
         var inputs = forms[i].getElementsByTagName('input');
         formParams[i] = [];
         for (var j = 0; j < inputs.length; j++) {
-          formParams[i].push(inputs[j].getAttribute('name'));
+          formParams[i].push([inputs[j].getAttribute('type'), inputs[j].getAttribute('name')]);
         }
       }
       var key = removeQueryParams(url);
