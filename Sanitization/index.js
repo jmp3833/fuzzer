@@ -1,32 +1,37 @@
 module.exports = {
-  checkSanity: function(browser, mapping, vectors) {
-    var keys = Object.keys[mapping];
-    //visitLinks(mapping, vectors, 0);
+  findVulnerabilities: function(siteUrl, auth, vectors, mapping, callback) {
+    console.log('in here');
+    var vulns = [];
+    var keys = Object.keys(mapping);
+    var stillLooking = 0;
 
-    for (var i = 0; i < keys; i++) {
-      // visit this link
-      // for each form param
-      //  for each vector
-      //   put vector in form and submit
-      //    check response
-      console.log(mapping[key[i]]['form-params']);
+    if (keys.length == 0) {
+      callback(vulns);
     }
 
-    function visitLinks(mapping, vectors, i) {
-      browser.visit(Object.keys(mapping)[i], function() {
-        var formParams = mapping[Object.keys(mapping)[i]]['form-params'];
+    for (var i = 0; i < keys.length; i++) {
+      var formParams = mapping[keys[i]]['form-params'];
+      if (formParams.length != 0) {
+        stillLooking++;
+
+        var formParams = mapping[keys[i]]['form-params'];
+
         for (var j = 0; j < vectors.length; j++) {
           for (var k = 0; k < formParams.length; k++) {
-            browser.fill('input[name="'+formParams[k]+'"]', vectors[j]);
+            auth(keys[i], function(browser) {
+              browser.fill('input[name="'+formParams[k]+'"]', vectors[j]);
+              browser.pressButton('input[name="Submit"]', function(res) { // TODO what input should we hit?
+                vulns.push(res);
+                console.log(res);
+                stillLooking--;
+                if (i == keys.length - 1 && stillLooking == 0) {
+                  callback(vulns);
+                }
+              });
+            });
           }
-        browser.pressButton('input[name="Submit"]', function(res) { // TODO what input should we hit?
-
-            if (i < Object.keys(mapping).length - 1) {
-              visitLinks(mapping, vectors, i + 1);
-            }
-          });
         }
-      });
+      }
     }
   }
 }

@@ -7,9 +7,9 @@ module.exports = {
     var stillLooking = 0;
 
     function crawl(url) {
+      stillLooking++;
       auth(siteUrl, function(browser) {
         browser.visit(url, function() {
-          stillLooking++;
           var foundPage = false;
           findInputs(url, browser.document.forms);
           for (var i = 0; i < browser.document.links.length; i++) {
@@ -24,7 +24,7 @@ module.exports = {
           }
           stillLooking--;
           if (stillLooking == 0 && !foundPage) {
-            callback(mapping);
+            callback(auth, mapping);
           }
         });
       });
@@ -77,13 +77,10 @@ module.exports = {
       return a;
     };
 
-    crawl(siteUrl);
-    function isSensitive(){
-      var fs = require('fs');
-      var wordlist = fs.readFileSync('sensitivewords.txt').toString().split("\n");
-      for(i in wordlist) {
-
-      }
+    function removeQueryParams(url) {
+      return url.split(/[?#]/)[0];
     }
+
+    crawl(siteUrl);
   }
 }
