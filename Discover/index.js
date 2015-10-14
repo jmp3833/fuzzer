@@ -110,11 +110,14 @@ function checkResponseTimeAndCode(browser, operation,  appString, callback) {
     console.log("Error performing operation: " + operation + "for app " + appString + "!!"); 
   }
    
-  var responseTime = parseInt(browser.response.time.toString().slice(0,4));
+  var responseTime = parseInt(browser.response.time.toString().slice(0,4)) / 10;
   console.log("Response Time: ", responseTime, "ms");
 
-  if(responseTime > 4500) {
-    console.err("Potential vulnerability! Request has taken more than 4 seconds to produce a response. "); 
+  var ceiling = 500;
+
+
+  if(responseTime > 500) {
+    console.error("Potential vulnerability! Request has taken more than " + ceiling + " ms to produce a response. "); 
   }
 
   console.log("Status Code: " + browser.response.status);

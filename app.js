@@ -88,6 +88,9 @@ function discoverOnBrowser(browser) {
 
   //Check cookie and show to user
   Discover.showCookie(browser);
+  if(optionsMap['slow'] != 0) {
+    console.log('custom response time max of ' + optionsMap['slow'] + " ms was found.");
+  }
   //Crawl pages and display all discovered links/input fields to user
   if(optionsMap['sensitive'] != 0) {
     console.log('List of sensitive options provided! '); 
