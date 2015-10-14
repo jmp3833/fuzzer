@@ -7,7 +7,8 @@ Justin Peterson, Keegan Parrote, and Carlos Castro
 
 DESCRIPTION
 ------------
-A simple fuzz tester written in javascript using the Node.js framework.
+A simple fuzz tester written in javascript using the Node.js framework. The instructions layed out in this document will
+tell you how to install and operate the software. These instructions are strictly for wWindows machines.
 
 CONFIGURATION
 ------------
@@ -33,11 +34,19 @@ OPERATION
 The tester is also run from the command prompt from the folder with `app.js`.  Use the command `node app.js command url` to run the fuzzer.  Details on commands and options are listed below.  Also note that `url` requires a port as well e.g. `http://localhost:8080` or `http://localhost:80`.
 
 List of commands and their functionality:
+
 COMMANDS:
-  * `discover`: Output a comprehensive, human-readable list of all discovered inputs to the system. Techniques include both crawling and guessing.
+  * `discover`              Output a comprehensive, human-readable list of all discovered inputs to the system. Techniques include both crawling and guessing.
+  
 OPTIONS:
-  * `--custom-auth=string`     Signal that the fuzzer should use hard-coded authentication for a specific application (e.g. dvwa). Optional.
-  *  `--common-words=file`     Newline-delimited file of common words to be used in page guessing and input guessing
+  * `--custom-auth=string`  Signal that the fuzzer should use hard-coded authentication for a specific application (e.g. dvwa). Optional.
+  * `--common-words=file`   Newline-delimited file of common words to be used in page guessing and input guessing
+
+TEST OPTIONS:
+ * `--vectors=file`         Newline-delimited file of common exploits to vulnerabilities. Required.
+ * `--sensitive=file`       Newline-delimited file data that should never be leaked. It's assumed that this data is in the application's database (e.g. test data), but is not reported in any response. Required.
+ * `--random=[true|false]`  When off, try each input to each page systematically.  When on, choose a random page, then a random input field and test all vectors. Default: false.
+ * `--slow=500`             Number of milliseconds considered when a response is considered "slow". Default is 500 milliseconds
 
 OUTPUT
 ------------
