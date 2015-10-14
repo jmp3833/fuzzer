@@ -89,12 +89,18 @@ function discoverOnBrowser(browser) {
   //Check cookie and show to user
   Discover.showCookie(browser);
   //Crawl pages and display all discovered links/input fields to user
-  console.log("Pages and input fields discovered:");
-  Crawl.findPageLinks(browser, url, function(mapping) {
-    console.log(JSON.stringify(mapping, null, 2));
-  })
-}
-
-function parseInputVectors() {
-
+  if(optionsMap['sensitive'] != 0) {
+    console.log('List of sensitive options provided! '); 
+    var path = optionsMap['sensitive'];
+    fs.readFile(path, function (err, data) {
+      if (err) throw err;
+      sensitiveWords = data.toString().split('\n');
+      console.log("Sensitive word list: ", sensitiveWords);
+      console.log("========================================");
+      console.log("Pages and input fields discovered:");
+      Crawl.findPageLinks(browser, url, function(mapping) {
+        console.log(JSON.stringify(mapping, null, 2));
+      })
+    }); 
+  }
 }
