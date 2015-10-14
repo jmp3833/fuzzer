@@ -32,7 +32,7 @@ module.exports = {
      .fill('input[name="password"]', "password")
      .pressButton('input[name="Login"]', function(res) {
         console.log('Verifying authentication into DVWA...');
-        verifyAuth(browser, "DVWA", callback);
+        checkResponseTimeAndCode(browser, "Login", "DVWA", callback);
       }); 
     });
   },
@@ -57,7 +57,7 @@ module.exports = {
               .fill('input[name="password"]', 'password' )
               .pressButton('input[value="Login"]', function(res) {
                 console.log('Verifying authentication into Bodgeit...');
-                verifyAuth(browser, "Bodgeit", callback);
+                checkResponseTimeAndCode(browser, "Login", "Bodgeit", callback);
               });
           });
         });
@@ -90,13 +90,35 @@ module.exports = {
   }
 }
 
-function verifyAuth(browser, appString, callback) {
+/*
+ * View the last http response of the browser and check
+ * its response code as well as the amount of time the response took
+ * to complete.
+ */ 
+function checkResponseTimeAndCode(browser, operation,  appString, callback) {
+
+  console.log("Processing request for ", browser.response._url);
+
+  console.log("===============================================");
+  
+  //Check status, throw an error if any code
+  //besides a 200 is thrown.
   if(browser.response.status == '200') {
     console.log("Successful login into " + appString + "!");
-    console.log("Status Code: " + browser.response.status);
   }
   else {
-    console.log("Login error into " + appString + "!!"); 
+    console.log("Error performing operation: " + operation + "for app " + appString + "!!"); 
   }
+   
+  var responseTime = parseInt(browser.response.time.toString().slice(0,4));
+  console.log("Response Time: ", responseTime, "ms");
+
+  if(responseTime > 4500) {
+    console.err("Potential vulnerability! Request has taken more than 4 seconds to produce a response. "); 
+  }
+
+  console.log("Status Code: " + browser.response.status);
+  console.log("===============================================");
+
   callback(browser); 
 }

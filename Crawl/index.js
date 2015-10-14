@@ -78,5 +78,12 @@ module.exports = {
     };
 
     crawl(siteUrl);
+    function isSensitive(){
+      var fs = require('fs');
+      var wordlist = fs.readFileSync('sensitivewords.txt').toString().split("\n");
+      for(i in wordlist) {
+
+      }
+    }
   }
 }
