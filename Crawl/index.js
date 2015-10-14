@@ -1,56 +1,36 @@
-var normalizeUrl = require('normalizeurl');
 var urlParser = require('url');
 
 module.exports = {
-  findPageLinks: function(browser, baseUrl, callback) {
+  findPageLinks: function(siteUrl, auth, callback) {
+    var mapping = {};
+    var discoveredLinks = [];
     var stillLooking = 0;
-    function crawl(baseUrl, discoveredUrls, mapping, url, document, callback) {
-      console.log('Crawling ' + url);
-      findInputs(url, document.forms, mapping);
-      var links = [];
-      for (var i = 0; i < document.links.length; i++) {
-        links.push(document.links[i]);
-      }
 
-      if (links.length > 0) {
-        visitLinks(links, baseUrl, discoveredUrls, mapping, callback, 0);
-      } else if (stillLooking == 0) {
-        callback(mapping);
-      }
-    }
-
-    function visitLinks(links, baseUrl, discoveredUrls, mapping, callback, i) {
-      if (inSameDomain(links[i], baseUrl)) {
-        var link = links[i].href;
-        if (discoveredUrls.indexOf(link) == -1) {
+    function crawl(url) {
+      auth(siteUrl, function(browser) {
+        browser.visit(url, function() {
           stillLooking++;
-          discoveredUrls.push(link);
-
-          browser.visit(links[i].href, function () {
-            crawl(baseUrl, discoveredUrls, mapping, browser.url, browser.document, callback);
-            stillLooking--;
-            if (i < links.length - 1) {
-              visitLinks(links, baseUrl, discoveredUrls, mapping, callback, i + 1);
-            } else if (stillLooking == 0) {
-              callback(mapping);
+          var foundPage = false;
+          findInputs(url, browser.document.forms);
+          for (var i = 0; i < browser.document.links.length; i++) {
+            if (inSameDomain(browser.document.links[i])) {
+              var link = browser.document.links[i].href;
+              if (discoveredLinks.indexOf(link) == -1) {
+                foundPage = true;
+                discoveredLinks.push(link);
+                crawl(link);
+              }
             }
-          });
-        } else if (i < links.length - 1) {
-          visitLinks(links, baseUrl, discoveredUrls, mapping, callback, i + 1);
-        }
-      } else if ( i < links.length - 1) {
-        visitLinks(links, baseUrl, discoveredUrls, mapping, callback, i + 1);
-      }
-      if (stillLooking == 0) {
-        callback(mapping);
-      }
+          }
+          stillLooking--;
+          if (stillLooking == 0 && !foundPage) {
+            callback(mapping);
+          }
+        });
+      });
     }
 
-    function removeQueryParams(url) {
-      return url.split(/[?#]/)[0];
-    }
-
-    function findInputs(url, forms, mapping) {
+    function findInputs(url, forms) {
       var urlObj = urlParser.parse(url);
       var queryParams = urlObj.query == null ? [] : urlObj.query.split('&');
       for (var i = 0; i < queryParams.length; i++) {
@@ -77,9 +57,9 @@ module.exports = {
       }
     }
 
-    function inSameDomain(link, baseUrl) {
+    function inSameDomain(link) {
       var parsedLink = urlParser.parse(link.href);
-      var parsedBase = urlParser.parse(baseUrl);
+      var parsedBase = urlParser.parse(siteUrl);
       var baseEndpoint = parsedBase.path.split('/')[1];
       var linkEndpoint = parsedLink.path.split('/')[1];
       return parsedLink.hostname == parsedBase.hostname && baseEndpoint == linkEndpoint;
@@ -97,6 +77,6 @@ module.exports = {
       return a;
     };
 
-    crawl(baseUrl, [], {}, browser.url, browser.document, callback);
+    crawl(siteUrl);
   }
 }
